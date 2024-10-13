@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Property {
+  id               Int       @id @default(autoincrement())
+  address          String
+  price            Float
+  rent             Float
+  livingArea       Float
+  brokerCommission Float
+  targetYield      Float
+  bankRate         Float
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  documents        Document[]
+  contacts         Contact[]
+}
+
+model Contact {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String
+  phone      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  properties Property[]
+}
+
+model Document {
+  id         Int      @id @default(autoincrement())
+  name       String
+  fileUrl    String
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
